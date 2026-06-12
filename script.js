@@ -3,6 +3,7 @@ const settingsModal = document.getElementById("settings-modal");
 const closeSettings = document.getElementById("close-settings");
 const saveSettings = document.getElementById("save-settings");
 
+// --- Settings Logic ---
 settingsBtn.addEventListener("click", () => {
   settingsModal.classList.remove("hidden");
 });
@@ -37,6 +38,13 @@ saveSettings.addEventListener("click", () => {
 
 loadSettings();
 
+// --- Search Logic ---
+// Trigger search on button click
+window.performSearch = function () {
+  fetchWordData();
+};
+
+// Trigger search on "Enter" key
 document
   .getElementById("field-tango")
   .addEventListener("keypress", function (e) {
@@ -45,6 +53,7 @@ document
     }
   });
 
+// --- Utility Functions ---
 const delay = (ms) => new Promise((res) => setTimeout(res, ms));
 
 function toggleLoading(show, text = "読み込み中...") {
@@ -58,12 +67,12 @@ function clearFields() {
   document.querySelectorAll("input, textarea").forEach((el) => (el.value = ""));
 }
 
+// --- Fetch Logic ---
 async function fetchWordData() {
   const query = document.getElementById("field-tango").value.trim();
   if (!query) return;
   toggleLoading(true, "検索中...");
 
-  // Direct call: No need for the python proxy
   const url = `https://jisho.org/api/v1/search/words?keyword=${encodeURIComponent(query)}`;
 
   try {
@@ -110,11 +119,11 @@ async function fetchSentenceData(word) {
   }
 }
 
+// --- Anki Integration ---
 async function addToAnki() {
   const deckName = (localStorage.getItem("ankiDeck") || "").trim();
   const modelName = (localStorage.getItem("ankiModel") || "").trim();
 
-  // ❌ BLOCK if not configured
   if (!deckName || !modelName) {
     alert(
       "カードを追加する前に、設定で「デッキ名」と「メモの種類」の両方を設定してください。",
@@ -203,4 +212,5 @@ function generateAnkiFurigana(word, reading) {
   }
   return furigana.trim();
 }
+
 lucide.createIcons();
