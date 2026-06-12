@@ -25,14 +25,6 @@ function loadSettings() {
     localStorage.getItem("ankiModel") || "";
 }
 
-function updateAddButtonState() {
-  const deck = localStorage.getItem("ankiDeck")?.trim();
-  const model = localStorage.getItem("ankiModel")?.trim();
-  document.querySelector("button[onclick='addToAnki()']").disabled = !(
-    deck && model
-  );
-}
-
 saveSettings.addEventListener("click", () => {
   const deckName = document.getElementById("deck-name").value.trim();
   const noteType = document.getElementById("note-type").value.trim();
